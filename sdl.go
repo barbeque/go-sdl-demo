@@ -21,11 +21,29 @@ func main() {
   fullScreenRect := sdl.Rect { 0, 0, 800, 600 }
   surface.FillRect(&fullScreenRect, 0x0)
 
-  
-  for {
+  var running bool
+  running = true
+
+  for running {
+    sdl.PumpEvents()
+
     rect := sdl.Rect{0, 0, 200, 200}
   	surface.FillRect(&rect, 0xffff0000)
   	window.UpdateSurface()
+
+    var event sdl.Event
+    for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+      switch t := event.(type) {
+      case *sdl.QuitEvent:
+        running = false
+      case *sdl.KeyDownEvent:
+        if t.Keysym.Sym == sdl.K_ESCAPE {
+          running = false
+        }
+      }
+    }
+
+    sdl.Delay(1)
   }
 
 	//sdl.Delay(1000)
